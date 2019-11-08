@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,8 @@ import com.simon.taps.server.database.RoomRepository;
 
 @RestController
 public class HttpController {
+
+  Logger logger = LoggerFactory.getLogger(JoinController.class);
 
   @Autowired
   private PlayerRepository playerRepository;
@@ -44,6 +48,19 @@ public class HttpController {
     return this.playerRepository.findById(playerId).get();
   }
 
+  @GetMapping("/test2/{roomId}")
+  public HashMap<String, Object> getPlayersInRoom(@PathVariable final String roomId) {
+
+    HashMap<String, Object> map = new HashMap<>();
+
+    List<Player> players = this.playerRepository.findByRoomId(roomId);
+
+    map.put("size", players.size());
+    map.put("players", players);
+
+    return map;
+  }
+
   @GetMapping("/rooms/{roomId}")
   public Room getRoomById(@PathVariable final String roomId) {
 
@@ -52,6 +69,20 @@ public class HttpController {
 
   @GetMapping("/json")
   public HashMap<String, Object> getTestJson() {
+
+    HashMap<String, Object> map = new HashMap<>();
+
+    map.put("game_state", "waiting");
+    map.put("ready", true);
+    map.put("number_of_players", 42);
+
+    return map;
+  }
+
+  @PostMapping("/json")
+  public HashMap<String, Object> getTestJson2(@Valid @RequestBody final String request) {
+
+    this.logger.info(request);
 
     HashMap<String, Object> map = new HashMap<>();
 

@@ -94,7 +94,7 @@ public class StateController {
     for (Player player : playersInRoom) {
 
       // mar generalva lett
-      if (!player.getTileId().equals(null)) {
+      if (player.getTileId() != null) {
         return;
       }
 

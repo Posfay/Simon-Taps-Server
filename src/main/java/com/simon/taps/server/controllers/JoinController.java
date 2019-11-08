@@ -63,6 +63,7 @@ public class JoinController {
 
         Room room = this.roomRepository.findById(postBody.getRoomId()).get();
         room.setState(GameUtil.PREPARING);
+        room.setTimer(LocalDateTime.now());
 
         this.roomRepository.save(room);
       }
