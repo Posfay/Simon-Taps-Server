@@ -30,7 +30,7 @@ public class GameController {
     HashMap<String, Object> responseMap = new HashMap<>();
 
     responseMap.put("status", "OK");
-    responseMap.put("state", state);
+    responseMap.put("game_state", state);
 
     return responseMap;
   }
@@ -41,9 +41,7 @@ public class GameController {
     boolean correct;
     String newPattern;
 
-    Room room;
-
-    room = this.roomRepository.findById(postBody.getRoomId()).get();
+    Room room = this.roomRepository.findById(postBody.getRoomId()).get();
     Player player = this.playerRepository.findById(postBody.getPlayerId()).get();
 
     newPattern = room.getPatternCompleted() + player.getTileId();

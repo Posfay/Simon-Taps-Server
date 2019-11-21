@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -81,6 +82,7 @@ public class StateController {
     this.roomRepository.save(room);
   }
 
+  @Transactional
   private void generateTileIds(final String roomId, final String playerId) {
 
     List<Player> playersInRoom = this.playerRepository.findByRoomId(roomId);
