@@ -1,5 +1,6 @@
 package com.simon.taps.server.controllers;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -49,6 +50,7 @@ public class StartController {
 
       Room room = this.roomRepository.findById(postBody.getRoomId()).get();
       room.setState(GameUtil.PLAYING);
+      room.setTimer(LocalDateTime.now());
 
       this.roomRepository.save(room);
     }

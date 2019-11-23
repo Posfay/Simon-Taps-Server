@@ -1,5 +1,6 @@
 package com.simon.taps.server.controllers;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 import javax.validation.Valid;
@@ -45,11 +46,10 @@ public class GameController {
     Player player = this.playerRepository.findById(postBody.getPlayerId()).get();
 
     newPattern = room.getPatternCompleted() + player.getTileId();
-
-    correct =
-        newPattern.regionMatches(0, room.getPattern(), 0, newPattern.length());
+    correct = newPattern.regionMatches(0, room.getPattern(), 0, newPattern.length());
 
     room.setPatternCompleted(newPattern);
+    room.setTimer(LocalDateTime.now());
 
     room = this.roomRepository.save(room);
 

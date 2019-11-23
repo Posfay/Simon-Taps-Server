@@ -136,7 +136,7 @@ public class StateController {
     // ----------------------------------PLAYING----------------------------------------------------
     if (room.getState().equals(GameUtil.PLAYING)) {
 
-      return playingState();
+      return playingState(room);
     }
 
     // ----------------------------------FAIL_END---------------------------------------------------
@@ -154,7 +154,19 @@ public class StateController {
     return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.INTERNAL_ERROR);
   }
 
-  private HashMap<String, Object> playingState() {
+  private HashMap<String, Object> playingState(final Room room) {
+
+    LocalDateTime nowMinusSec = LocalDateTime.now().minusSeconds(GameUtil.WAIT_BETWEEN_2_CLICKS);
+    LocalDateTime timerStart = room.getTimer();
+
+    if (nowMinusSec.isAfter(timerStart)) {
+
+      room.setState(GameUtil.FAIL_END);
+      this.roomRepository.save(room);
+
+      HashMap<String, Object> responseMap = craftResponse(GameUtil.FAIL_END);
+      return responseMap;
+    }
 
     HashMap<String, Object> responseMap = craftResponse(GameUtil.PLAYING);
     return responseMap;
