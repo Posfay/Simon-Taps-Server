@@ -38,6 +38,7 @@ public class LeaveController {
       this.playerRepository.delete(player);
       HashMap<String, Object> responseMap = new HashMap<>();
       responseMap.put("status", "OK");
+      responseMap.put("left", true);
       return responseMap;
     }
 
