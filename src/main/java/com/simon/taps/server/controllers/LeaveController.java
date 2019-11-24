@@ -14,6 +14,7 @@ import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
 import com.simon.taps.server.database.RoomRepository;
 import com.simon.taps.server.util.GameUtil;
+import com.simon.taps.server.util.ResponseErrorsUtil;
 import com.simon.taps.server.wrappers.LeavePostRequestWrapper;
 
 @RestController
@@ -40,9 +41,7 @@ public class LeaveController {
       return responseMap;
     }
 
-    HashMap<String, Object> responseMap = new HashMap<>();
-    responseMap.put("status", "NOT_LEFT");
-    return responseMap;
+    return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.NOT_LEFT);
   }
 
 }
