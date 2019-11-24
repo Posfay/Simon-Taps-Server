@@ -40,6 +40,34 @@
   * URL paraméterként várja a room és player id-t:
   * `GET /state/1234/1234`
 
+**Create**
+----
+  Szoba létrehozása
+
+* **URL**
+
+  /create
+
+* **Method:**
+
+  `POST`
+  
+*  **JSON Params**
+
+   `roomId:[string]`
+   
+   `playerId:[string]`
+
+* **Success Response:**
+
+  * **Case:** Successful creation and join <br />
+    * **Content:** `{ status: 'OK', number_of_players: [int] }`
+
+* **Error Response:**
+ 
+  * **Reason:** Room already exists <br />
+    * **Content:** `{ status: 'ERROR', reason: 'ROOM_ALREADY_EXISTS' }`
+
 **Join**
 ----
   Csatlakozás szobához saját player id-val
@@ -65,11 +93,37 @@
 
 * **Error Response:**
  
-  * **Reason:** Internal Server Error <br />
-    * **Content:** `{ status: 'ERROR', reason: [string] }`
+  * **Reason:** Room does not exist <br />
+    * **Content:** `{ status: 'ERROR', reason: 'ROOM_DOES_NOT_EXIST' }`
 
   * **Reason:** Room full <br />
-    * **Content:** `{ status: 'ERROR', reason: [string] }`
+    * **Content:** `{ status: 'ERROR', reason: 'ROOM_IS_FULL' }`
+
+**Leave**
+----
+  Kilépés szobából amíg WAITING state-ben van
+
+* **URL**
+
+  /leave
+
+* **Method:**
+
+  `POST`
+  
+*  **JSON Params**
+   
+   `playerId:[string]`
+
+* **Success Response:**
+
+  * **Case:** Successfully left <br />
+    * **Content:** `{ status: 'OK' }`
+
+* **Error Response:**
+
+  * **Reason:** Not left from room <br />
+    * **Content:** `{ status: 'ERROR', reason: 'NOT_LEFT' }`
 
 **Start**
 ----
