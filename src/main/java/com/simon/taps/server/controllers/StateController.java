@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.persistence.OptimisticLockException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,8 +85,9 @@ public class StateController {
   }
 
   @Transactional
-  private void generateTileIds(final String roomId, final String playerId) {
+  public void generateTileIds(final String roomId, final String playerId) {
 
+    Room room = this.roomRepository.findById(roomId).get();
     List<Player> playersInRoom = this.playerRepository.findByRoomId(roomId);
     List<Integer> tileIds = new ArrayList<>();
     tileIds.add(1);
@@ -103,6 +106,8 @@ public class StateController {
       player.setTileId(tileIds.remove(0).toString());
       this.playerRepository.save(player);
     }
+
+    this.roomRepository.save(room);
   }
 
   @GetMapping("/state/{roomId}/{playerId}")
@@ -180,7 +185,11 @@ public class StateController {
     // TO SHOWING_PATTERN
     if (nowMinusSec.isAfter(timerStart)) {
 
-      generatePattern(room.getId());
+      try {
+        generatePattern(room.getId());
+      } catch (OptimisticLockException ignore) {
+        // optimistic locking -> go forward
+      }
 
       room = this.roomRepository.findById(room.getId()).get();
       room.setState(GameUtil.SHOWING_PATTERN);
@@ -194,7 +203,12 @@ public class StateController {
     Player player = this.playerRepository.findById(playerId).get();
 
     if (player.getTileId() == null) {
-      generateTileIds(room.getId(), playerId);
+
+      try {
+        generateTileIds(room.getId(), playerId);
+      } catch (OptimisticLockException ignore) {
+        // optimistic locking -> go forward
+      }
     }
 
     player = this.playerRepository.findById(playerId).get();

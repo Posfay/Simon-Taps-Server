@@ -3,6 +3,7 @@ package com.simon.taps.server.controllers;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
+import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class JoinController {
 
         try {
           saveRoomAndPlayer(room, newPlayer);
-        } catch (Exception e) {
+        } catch (OptimisticLockException ignore) {
           continue;
         }
 
@@ -82,29 +83,21 @@ public class JoinController {
     }
 
     // -----------------------------new room--------------------------------------------------------
-    while (true) {
 
-      Room newRoom = new Room();
-      newRoom.setId(postBody.getRoomId());
-      newRoom.setPattern("");
-      newRoom.setPatternCompleted("");
-      newRoom.setState(GameUtil.WAITING);
-      newRoom.setTimer(LocalDateTime.now());
+    Room newRoom = new Room();
+    newRoom.setId(postBody.getRoomId());
+    newRoom.setPattern("");
+    newRoom.setPatternCompleted("");
+    newRoom.setState(GameUtil.WAITING);
+    newRoom.setTimer(LocalDateTime.now());
 
-      Player newPlayer = new Player();
-      newPlayer.setId(postBody.getPlayerId());
-      newPlayer.setRoomId(postBody.getRoomId());
-      newPlayer.setTileId(null);
-      newPlayer.setReady(false);
+    Player newPlayer = new Player();
+    newPlayer.setId(postBody.getPlayerId());
+    newPlayer.setRoomId(postBody.getRoomId());
+    newPlayer.setTileId(null);
+    newPlayer.setReady(false);
 
-      try {
-        saveRoomAndPlayer(newRoom, newPlayer);
-      } catch (Exception e) {
-        continue;
-      }
-
-      break;
-    }
+    saveRoomAndPlayer(newRoom, newPlayer);
 
     return craftResponse(1);
   }
