@@ -3,7 +3,6 @@ package com.simon.taps.server.controllers;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
-import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import com.simon.taps.server.util.ResponseErrorsUtil;
 import com.simon.taps.server.wrappers.PostRequestWrapper;
 
 @RestController
-public class JoinController {
+public class CreateRoomController {
 
   @Autowired
   private PlayerRepository playerRepository;
@@ -39,49 +38,31 @@ public class JoinController {
     return responseMap;
   }
 
-  @PostMapping("/join")
-  public HashMap<String, Object> postJoin(@Valid @RequestBody final PostRequestWrapper postBody) {
+  @PostMapping("/create")
+  public HashMap<String, Object> createRoom(@Valid @RequestBody final PostRequestWrapper postBody) {
 
     boolean roomExists = this.roomRepository.existsById(postBody.getRoomId());
 
-    if (!roomExists) {
-      return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.ROOM_DOES_NOT_EXIST);
+    if (roomExists) {
+      return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.ROOM_ALREADY_EXISTS);
     }
 
-    long playersInRoom = 0;
+    Room newRoom = new Room();
+    newRoom.setId(postBody.getRoomId());
+    newRoom.setPattern("");
+    newRoom.setPatternCompleted("");
+    newRoom.setState(GameUtil.WAITING);
+    newRoom.setTimer(LocalDateTime.now());
 
-    while (true) {
+    Player newPlayer = new Player();
+    newPlayer.setId(postBody.getPlayerId());
+    newPlayer.setRoomId(postBody.getRoomId());
+    newPlayer.setTileId(null);
+    newPlayer.setReady(false);
 
-      playersInRoom = this.playerRepository.findByRoomId(postBody.getRoomId()).size();
-      Room room = this.roomRepository.findById(postBody.getRoomId()).get();
+    saveRoomAndPlayer(newRoom, newPlayer);
 
-      if (playersInRoom >= 4) {
-        return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.ROOM_IS_FULL);
-      }
-
-      Player newPlayer = new Player();
-      newPlayer.setId(postBody.getPlayerId());
-      newPlayer.setRoomId(postBody.getRoomId());
-      newPlayer.setTileId(null);
-      newPlayer.setReady(false);
-
-      if (++playersInRoom >= 4) {
-
-        room.setState(GameUtil.PREPARING);
-        room.setTimer(LocalDateTime.now());
-      }
-
-      try {
-        saveRoomAndPlayer(room, newPlayer);
-      } catch (OptimisticLockException ignore) {
-        continue;
-      }
-
-      break;
-    }
-
-    return craftResponse(playersInRoom);
-
+    return craftResponse(1);
   }
 
   @Transactional
@@ -90,5 +71,4 @@ public class JoinController {
     this.roomRepository.save(room);
     this.playerRepository.save(newPlayer);
   }
-
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 public class ResponseErrorsUtil {
 
   public static enum Error {
-    INTERNAL_ERROR, ROOM_IS_FULL
+    INTERNAL_ERROR, ROOM_ALREADY_EXISTS, ROOM_DOES_NOT_EXIST, ROOM_IS_FULL
   }
 
   public static HashMap<String, Object> errorResponse(final Error error) {
