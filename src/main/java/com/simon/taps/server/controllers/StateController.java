@@ -87,7 +87,6 @@ public class StateController {
   @Transactional
   public void generateTileIds(final String roomId, final String playerId) {
 
-    Room room = this.roomRepository.findById(roomId).get();
     List<Player> playersInRoom = this.playerRepository.findByRoomId(roomId);
     List<Integer> tileIds = new ArrayList<>();
     tileIds.add(1);
@@ -95,6 +94,8 @@ public class StateController {
     tileIds.add(3);
     tileIds.add(4);
     Collections.shuffle(tileIds);
+
+    Room room = this.roomRepository.findById(roomId).get();
 
     for (Player player : playersInRoom) {
 
@@ -105,9 +106,9 @@ public class StateController {
 
       player.setTileId(tileIds.remove(0).toString());
       this.playerRepository.save(player);
+      // for optimistic locking
+      room = this.roomRepository.save(room);
     }
-
-    this.roomRepository.save(room);
   }
 
   @GetMapping("/state/{roomId}/{playerId}")
