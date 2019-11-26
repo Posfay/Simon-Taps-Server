@@ -7,11 +7,11 @@ import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simon.taps.server.database.DatabaseUtil;
 import com.simon.taps.server.database.Player;
 import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
@@ -22,6 +22,9 @@ import com.simon.taps.server.wrappers.PostRequestWrapper;
 
 @RestController
 public class JoinController {
+
+  @Autowired
+  private DatabaseUtil databaseUtil;
 
   @Autowired
   private PlayerRepository playerRepository;
@@ -72,7 +75,7 @@ public class JoinController {
       }
 
       try {
-        saveRoomAndPlayer(room, newPlayer);
+        this.databaseUtil.saveRoomAndPlayer(room, newPlayer);
       } catch (OptimisticLockException ignore) {
         continue;
       }
@@ -81,14 +84,6 @@ public class JoinController {
     }
 
     return craftResponse(playersInRoom);
-
-  }
-
-  @Transactional
-  public void saveRoomAndPlayer(final Room room, final Player newPlayer) {
-
-    this.roomRepository.save(room);
-    this.playerRepository.save(newPlayer);
   }
 
 }

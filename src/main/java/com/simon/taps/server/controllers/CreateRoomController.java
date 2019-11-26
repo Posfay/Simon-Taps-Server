@@ -6,13 +6,12 @@ import java.util.HashMap;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simon.taps.server.database.DatabaseUtil;
 import com.simon.taps.server.database.Player;
-import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
 import com.simon.taps.server.database.RoomRepository;
 import com.simon.taps.server.util.GameUtil;
@@ -23,7 +22,7 @@ import com.simon.taps.server.wrappers.PostRequestWrapper;
 public class CreateRoomController {
 
   @Autowired
-  private PlayerRepository playerRepository;
+  private DatabaseUtil databaseUtil;
 
   @Autowired
   private RoomRepository roomRepository;
@@ -60,15 +59,8 @@ public class CreateRoomController {
     newPlayer.setTileId(null);
     newPlayer.setReady(false);
 
-    saveRoomAndPlayer(newRoom, newPlayer);
+    this.databaseUtil.saveRoomAndPlayer(newRoom, newPlayer);
 
     return craftResponse(1);
-  }
-
-  @Transactional
-  public void saveRoomAndPlayer(final Room room, final Player newPlayer) {
-
-    this.roomRepository.save(room);
-    this.playerRepository.save(newPlayer);
   }
 }

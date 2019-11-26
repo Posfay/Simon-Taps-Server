@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simon.taps.server.database.DatabaseUtil;
 import com.simon.taps.server.database.Player;
 import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
@@ -21,6 +21,9 @@ import com.simon.taps.server.util.ResponseErrorsUtil;
 
 @RestController
 public class StateController {
+
+  @Autowired
+  private DatabaseUtil databaseUtil;
 
   @Autowired
   private PlayerRepository playerRepository;
@@ -80,34 +83,6 @@ public class StateController {
 
     room.setPattern(patternStr);
     this.roomRepository.save(room);
-  }
-
-  @Transactional
-  public void generateTileIds(final String roomId, final String playerId) {
-
-    List<Player> playersInRoom = this.playerRepository.findByRoomId(roomId);
-    List<Integer> tileIds = new ArrayList<>();
-    tileIds.add(1);
-    tileIds.add(2);
-    tileIds.add(3);
-    tileIds.add(4);
-    Collections.shuffle(tileIds);
-
-    Room room = this.roomRepository.findById(roomId).get();
-
-    for (Player player : playersInRoom) {
-
-      // mar generalva lett
-      if (player.getTileId() != null) {
-        return;
-      }
-
-      player.setTileId(tileIds.remove(0).toString());
-      this.playerRepository.save(player);
-
-      // for optimistic locking
-      room = this.roomRepository.save(room);
-    }
   }
 
   @GetMapping("/state/{roomId}/{playerId}")
@@ -205,7 +180,7 @@ public class StateController {
     if (player.getTileId() == null) {
 
       try {
-        generateTileIds(room.getId(), playerId);
+        this.databaseUtil.generateTileIds(room.getId(), playerId);
       } catch (Exception ignore) {
         // optimistic locking -> go forward
       }
