@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.persistence.OptimisticLockException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +43,7 @@ public class StateController {
     HashMap<String, Object> responseMap = new HashMap<>();
 
     responseMap.put("status", "OK");
-    responseMap.put("game_state", state);
+    responseMap.put("gameState", state);
 
     return responseMap;
   }
@@ -106,6 +104,7 @@ public class StateController {
 
       player.setTileId(tileIds.remove(0).toString());
       this.playerRepository.save(player);
+
       // for optimistic locking
       room = this.roomRepository.save(room);
     }
@@ -188,7 +187,7 @@ public class StateController {
 
       try {
         generatePattern(room.getId());
-      } catch (OptimisticLockException ignore) {
+      } catch (Exception ignore) {
         // optimistic locking -> go forward
       }
 
@@ -207,7 +206,7 @@ public class StateController {
 
       try {
         generateTileIds(room.getId(), playerId);
-      } catch (OptimisticLockException ignore) {
+      } catch (Exception ignore) {
         // optimistic locking -> go forward
       }
     }
@@ -215,7 +214,7 @@ public class StateController {
     player = this.playerRepository.findById(playerId).get();
 
     HashMap<String, Object> responseMap = craftResponse(GameUtil.PREPARING);
-    responseMap.put("tile_id", player.getTileId());
+    responseMap.put("tileId", player.getTileId());
     return responseMap;
   }
 
@@ -234,8 +233,28 @@ public class StateController {
 
   private HashMap<String, Object> waitingState(final String roomId) {
 
+    while (true) {
+
+      Room room = this.roomRepository.findById(roomId).get();
+      long playersInRoom = this.playerRepository.findByRoomId(roomId).size();
+
+      if (playersInRoom >= 4) {
+
+        room.setState(GameUtil.PREPARING);
+
+        try {
+          this.roomRepository.save(room);
+        } catch (Exception ignore) {
+          // optimistic locking -> go forward
+          continue;
+        }
+      }
+
+      break;
+    }
+
     HashMap<String, Object> responseMap = craftResponse(GameUtil.WAITING);
-    responseMap.put("number_of_players", this.playerRepository.findByRoomId(roomId).size());
+    responseMap.put("numberOfPlayers", this.playerRepository.findByRoomId(roomId).size());
     return responseMap;
   }
 }

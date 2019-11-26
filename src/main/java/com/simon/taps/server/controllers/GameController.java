@@ -31,7 +31,7 @@ public class GameController {
     HashMap<String, Object> responseMap = new HashMap<>();
 
     responseMap.put("status", "OK");
-    responseMap.put("game_state", state);
+    responseMap.put("gameState", state);
 
     return responseMap;
   }

@@ -33,7 +33,7 @@ public class CreateRoomController {
     HashMap<String, Object> responseMap = new HashMap<>();
 
     responseMap.put("status", "OK");
-    responseMap.put("number_of_players", playersInRoom);
+    responseMap.put("numberOfPlayers", playersInRoom);
 
     return responseMap;
   }

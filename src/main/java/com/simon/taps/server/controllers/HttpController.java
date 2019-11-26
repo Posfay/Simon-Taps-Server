@@ -72,9 +72,9 @@ public class HttpController {
 
     HashMap<String, Object> map = new HashMap<>();
 
-    map.put("game_state", "waiting");
+    map.put("gameState", "waiting");
     map.put("ready", true);
-    map.put("number_of_players", 42);
+    map.put("numberOfPlayers", 42);
 
     return map;
   }
@@ -86,9 +86,9 @@ public class HttpController {
 
     HashMap<String, Object> map = new HashMap<>();
 
-    map.put("game_state", "waiting");
+    map.put("gameState", "waiting");
     map.put("ready", true);
-    map.put("number_of_players", 42);
+    map.put("numberOfPlayers", 42);
 
     return map;
   }
