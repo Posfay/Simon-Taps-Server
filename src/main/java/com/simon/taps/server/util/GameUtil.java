@@ -4,7 +4,7 @@ public class GameUtil {
 
   public static final String FAIL_END = "5_fail_end";
 
-  public static final Long WAIT_BETWEEN_2_CLICKS = 3L;
+  public static final Long MAX_ROOM_IDLE_MINUTES = 15L;
 
   public static final String PLAYING = "4_playing";
 
@@ -15,6 +15,8 @@ public class GameUtil {
   public static final String SHOWING_PATTERN = "3_showing_pattern";
 
   public static final String SUCCESSFUL_END = "5_successful_end";
+
+  public static final Long WAIT_BETWEEN_2_CLICKS = 3L;
 
   public static final Long WAIT_IN_PREPARING_SEC = 10L;
 
