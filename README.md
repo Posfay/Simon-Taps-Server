@@ -15,22 +15,22 @@
 * **Success Response:**
 
   * **Case:** Game state in Waiting <br />
-    * **Content:** `{ status: 'OK', game_state: [string], number_of_players: [int] }`
+    * **Content:** `{ status: 'OK', gameState: [string], numberOfPlayers: [int] }`
 
   * **Case:** Game state in Preparing <br />
-    * **Content:** `{ status: 'OK', game_state: [string], tile_id: [int] }`
+    * **Content:** `{ status: 'OK', gameState: [string], tileId: [int] }`
     
   * **Case:** Game state in Showing Pattern <br />
-    * **Content:** `{ status: 'OK', game_state: [string], pattern: [string] }`
+    * **Content:** `{ status: 'OK', gameState: [string], pattern: [string] }`
 
   * **Case:** Game state in Playing <br />
-    * **Content:** `{ status: 'OK', game_state: [string] }`
+    * **Content:** `{ status: 'OK', gameState: [string] }`
 
   * **Case:** Game state in Successful End <br />
-    * **Content:** `{ status: 'OK', game_state: [string] }`
+    * **Content:** `{ status: 'OK', gameState: [string] }`
 
   * **Case:** Game state in Fail End <br />
-    * **Content:** `{ status: 'OK', game_state: [string] }`
+    * **Content:** `{ status: 'OK', gameState: [string] }`
 
 * **Error Response:**
   * TODO
@@ -61,7 +61,7 @@
 * **Success Response:**
 
   * **Case:** Successful creation and join <br />
-    * **Content:** `{ status: 'OK', number_of_players: [int] }`
+    * **Content:** `{ status: 'OK', numberOfPlayers: [int] }`
 
 * **Error Response:**
  
@@ -89,7 +89,7 @@
 * **Success Response:**
 
   * **Case:** Successful join <br />
-    * **Content:** `{ status: 'OK', number_of_players: [int] }`
+    * **Content:** `{ status: 'OK', numberOfPlayers: [int] }`
 
 * **Error Response:**
  
@@ -172,13 +172,13 @@
 * **Success Response:**
 
   * **Case:** Successful press and game is still in Playing State <br />
-    * **Content:** `{ status: 'OK', game_state: [string] }`
+    * **Content:** `{ status: 'OK', gameState: [string] }`
 
   * **Case:** Wrong Press <br />
-    * **Content:** `{ status: 'OK', game_state: [string] }`
+    * **Content:** `{ status: 'OK', gameState: [string] }`
 
   * **Case:** Successful press and game is in Successful End State <br />
-    * **Content:** `{ status: 'OK', game_state: [string] }`
+    * **Content:** `{ status: 'OK', gameState: [string] }`
 
 * **Error Response:**
  
