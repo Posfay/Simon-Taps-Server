@@ -15,6 +15,7 @@ import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
 import com.simon.taps.server.database.RoomRepository;
 import com.simon.taps.server.util.GameUtil;
+import com.simon.taps.server.util.ServerUtil;
 import com.simon.taps.server.wrappers.PostRequestWrapper;
 
 @RestController
@@ -30,8 +31,8 @@ public class GameController {
 
     HashMap<String, Object> responseMap = new HashMap<>();
 
-    responseMap.put("status", "OK");
-    responseMap.put("gameState", state);
+    responseMap.put(ServerUtil.STATUS, ServerUtil.OK);
+    responseMap.put(ServerUtil.GAME_STATE, state);
 
     return responseMap;
   }
@@ -62,10 +63,14 @@ public class GameController {
       return craftResponse(GameUtil.SUCCESSFUL_END);
     }
 
+    // Jo
     if (correct) {
 
       return craftResponse(GameUtil.PLAYING);
-    } else {
+    }
+
+    // Rossz -> FAIL_END
+    else {
 
       room.setState(GameUtil.FAIL_END);
       this.roomRepository.save(room);

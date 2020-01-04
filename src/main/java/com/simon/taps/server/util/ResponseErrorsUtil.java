@@ -12,8 +12,8 @@ public class ResponseErrorsUtil {
 
     HashMap<String, Object> map = new HashMap<>();
 
-    map.put("status", "ERROR");
-    map.put("reason", error.toString());
+    map.put(ServerUtil.STATUS, ServerUtil.ERROR);
+    map.put(ServerUtil.REASON, error.toString());
 
     return map;
   }

@@ -18,6 +18,7 @@ import com.simon.taps.server.database.Room;
 import com.simon.taps.server.database.RoomRepository;
 import com.simon.taps.server.util.GameUtil;
 import com.simon.taps.server.util.ResponseErrorsUtil;
+import com.simon.taps.server.util.ServerUtil;
 
 @RestController
 public class StateController {
@@ -45,8 +46,8 @@ public class StateController {
 
     HashMap<String, Object> responseMap = new HashMap<>();
 
-    responseMap.put("status", "OK");
-    responseMap.put("gameState", state);
+    responseMap.put(ServerUtil.STATUS, ServerUtil.OK);
+    responseMap.put(ServerUtil.GAME_STATE, state);
 
     return responseMap;
   }
@@ -171,7 +172,7 @@ public class StateController {
       room = this.roomRepository.save(room);
 
       HashMap<String, Object> responseMap = craftResponse(GameUtil.SHOWING_PATTERN);
-      responseMap.put("pattern", room.getPattern());
+      responseMap.put(ServerUtil.PATTERN, room.getPattern());
       return responseMap;
     }
 
@@ -189,14 +190,14 @@ public class StateController {
     player = this.playerRepository.findById(playerId).get();
 
     HashMap<String, Object> responseMap = craftResponse(GameUtil.PREPARING);
-    responseMap.put("tileId", player.getTileId());
+    responseMap.put(ServerUtil.TILE_ID, player.getTileId());
     return responseMap;
   }
 
   private HashMap<String, Object> showingPatternState(final Room room) {
 
     HashMap<String, Object> responseMap = craftResponse(GameUtil.SHOWING_PATTERN);
-    responseMap.put("pattern", room.getPattern());
+    responseMap.put(ServerUtil.PATTERN, room.getPattern());
     return responseMap;
   }
 
@@ -229,7 +230,8 @@ public class StateController {
     }
 
     HashMap<String, Object> responseMap = craftResponse(GameUtil.WAITING);
-    responseMap.put("numberOfPlayers", this.playerRepository.findByRoomId(roomId).size());
+    responseMap.put(ServerUtil.NUMBER_OF_PLAYERS,
+        this.playerRepository.findByRoomId(roomId).size());
     return responseMap;
   }
 }

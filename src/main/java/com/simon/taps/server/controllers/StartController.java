@@ -17,6 +17,7 @@ import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
 import com.simon.taps.server.database.RoomRepository;
 import com.simon.taps.server.util.GameUtil;
+import com.simon.taps.server.util.ServerUtil;
 import com.simon.taps.server.wrappers.PostRequestWrapper;
 
 @RestController
@@ -75,7 +76,7 @@ public class StartController {
     }
 
     HashMap<String, Object> responseMap = new HashMap<>();
-    responseMap.put("status", "OK");
+    responseMap.put(ServerUtil.STATUS, ServerUtil.OK);
 
     return responseMap;
   }
