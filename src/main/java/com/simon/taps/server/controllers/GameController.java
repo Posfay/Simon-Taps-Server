@@ -42,19 +42,21 @@ public class GameController {
 
     boolean correct;
     String newPattern;
+    long round;
 
     Room room = this.roomRepository.findById(postBody.getRoomId()).get();
     Player player = this.playerRepository.findById(postBody.getPlayerId()).get();
 
     newPattern = room.getPatternCompleted() + player.getTileId();
     correct = newPattern.regionMatches(0, room.getPattern(), 0, newPattern.length());
+    round = room.getRound();
 
     room.setPatternCompleted(newPattern);
     room.setTimer(LocalDateTime.now());
 
     room = this.roomRepository.save(room);
 
-    // Utolso es jo -> SUCCESSFUL END
+    // Jo es utolso -> SUCCESSFUL END
     if (correct && (newPattern.length() == room.getPattern().length())) {
 
       room.setState(GameUtil.SUCCESSFUL_END);
@@ -63,6 +65,14 @@ public class GameController {
       return craftResponse(GameUtil.SUCCESSFUL_END);
     }
 
+    // Jo es round vege -> uj round
+    if (correct
+        && (newPattern.length() == room.getPattern().substring(0, (int) round - 1).length())) {
+
+      // TODO: new round
+      room.setPatternCompleted("");
+      room.setRound(round + 1);
+    }
     // Jo
     if (correct) {
 

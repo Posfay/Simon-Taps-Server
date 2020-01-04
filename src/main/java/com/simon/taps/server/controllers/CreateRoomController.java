@@ -56,6 +56,7 @@ public class CreateRoomController {
     newRoom.setId(postBody.getRoomId());
     newRoom.setPattern("");
     newRoom.setPatternCompleted("");
+    newRoom.setRound(GameUtil.FIRST_ROUND_LENGTH);
     newRoom.setState(GameUtil.WAITING);
     newRoom.setTimer(LocalDateTime.now());
 

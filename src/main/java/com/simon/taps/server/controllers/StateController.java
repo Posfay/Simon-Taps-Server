@@ -60,18 +60,18 @@ public class StateController {
 
   private void generatePattern(final String roomId) {
 
-    List<Integer> pattern = new ArrayList<>();
-    for (int i = 0; i < GameUtil.ROUND_LENGTH; i++) {
-      pattern.add(1);
-      pattern.add(2);
-      pattern.add(3);
-      pattern.add(4);
+    List<Long> pattern = new ArrayList<>();
+    for (int i = 0; i < ((GameUtil.MAX_PATTERN_LENGTH / 4) + 1); i++) {
+      pattern.add(1L);
+      pattern.add(2L);
+      pattern.add(3L);
+      pattern.add(4L);
     }
     Collections.shuffle(pattern);
 
     String patternStr = "";
 
-    for (int i = 0; i < (4 * GameUtil.ROUND_LENGTH); i++) {
+    for (int i = 0; i < GameUtil.MAX_PATTERN_LENGTH; i++) {
       patternStr += pattern.remove(0).toString();
     }
 

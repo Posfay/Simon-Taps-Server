@@ -21,6 +21,9 @@ public class Room {
   @Column(name = "pattern_completed")
   private String patternCompleted;
 
+  @Column(name = "round")
+  private Long round;
+
   @Column(name = "state")
   private String state;
 
@@ -40,6 +43,10 @@ public class Room {
 
   public String getPatternCompleted() {
     return this.patternCompleted;
+  }
+
+  public Long getRound() {
+    return this.round;
   }
 
   public String getState() {
@@ -64,6 +71,10 @@ public class Room {
 
   public void setPatternCompleted(final String patternCompleted) {
     this.patternCompleted = patternCompleted;
+  }
+
+  public void setRound(final Long round) {
+    this.round = round;
   }
 
   public void setState(final String state) {
