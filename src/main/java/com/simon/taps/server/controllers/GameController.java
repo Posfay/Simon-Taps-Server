@@ -2,6 +2,7 @@ package com.simon.taps.server.controllers;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -73,6 +74,15 @@ public class GameController {
       room.setPatternCompleted("");
       room.setRound(round + 1);
       room.setState(GameUtil.SHOWING_PATTERN);
+      room = this.roomRepository.save(room);
+
+      List<Player> players = this.playerRepository.findByRoomId(room.getId());
+
+      for (Player p : players) {
+
+        p.setReady(false);
+        this.playerRepository.save(p);
+      }
     }
     // Jo
     if (correct) {
