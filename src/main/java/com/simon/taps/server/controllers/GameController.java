@@ -67,11 +67,12 @@ public class GameController {
 
     // Jo es round vege -> uj round
     if (correct
-        && (newPattern.length() == room.getPattern().substring(0, (int) round - 1).length())) {
+        && (newPattern.length() == room.getPattern().substring(0, (int) round).length())) {
 
       // TODO: new round
       room.setPatternCompleted("");
       room.setRound(round + 1);
+      room.setState(GameUtil.SHOWING_PATTERN);
     }
     // Jo
     if (correct) {

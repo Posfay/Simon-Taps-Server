@@ -196,8 +196,9 @@ public class StateController {
 
   private HashMap<String, Object> showingPatternState(final Room room) {
 
+    long round = room.getRound();
     HashMap<String, Object> responseMap = craftResponse(GameUtil.SHOWING_PATTERN);
-    responseMap.put(ServerUtil.PATTERN, room.getPattern());
+    responseMap.put(ServerUtil.PATTERN, room.getPattern().substring(0, (int) round));
     return responseMap;
   }
 
