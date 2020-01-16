@@ -171,8 +171,10 @@ public class StateController {
       room.setState(GameUtil.SHOWING_PATTERN);
       room = this.roomRepository.save(room);
 
+      long round = room.getRound();
+
       HashMap<String, Object> responseMap = craftResponse(GameUtil.SHOWING_PATTERN);
-      responseMap.put(ServerUtil.PATTERN, room.getPattern());
+      responseMap.put(ServerUtil.PATTERN, room.getPattern().substring(0, (int) round));
       return responseMap;
     }
 

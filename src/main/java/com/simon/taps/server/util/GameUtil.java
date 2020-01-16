@@ -4,7 +4,7 @@ public class GameUtil {
 
   public static final String FAIL_END = "5_fail_end";
 
-  public static final Long FIRST_ROUND_LENGTH = 4L;
+  public static final Long FIRST_ROUND_LENGTH = 1L;
 
   public static final Long MAX_PATTERN_LENGTH = 30L;
 
