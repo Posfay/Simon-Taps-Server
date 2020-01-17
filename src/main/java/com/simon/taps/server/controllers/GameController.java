@@ -70,7 +70,6 @@ public class GameController {
     if (correct
         && (newPattern.length() == room.getPattern().substring(0, (int) round).length())) {
 
-      // TODO: new round
       room.setPatternCompleted("");
       room.setRound(round + 1);
       room.setState(GameUtil.SHOWING_PATTERN);
