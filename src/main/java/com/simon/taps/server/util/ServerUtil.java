@@ -6,11 +6,15 @@ public class ServerUtil {
 
   public static final String AUTHENTICATION_KEY = "rEJ1ME7MaojA4CPIOG2wJ3tX4U7lHAIgJqX6XGT3";
 
+  public static final String COMPATIBLE_VERSION = "compatible";
+
   public static final String ERROR = "ERROR";
 
   public static final String GAME_STATE = "gameState";
 
   public static final String LEFT = "left";
+
+  public static final String MIN_COMPATIBLE_VERSION = "1.1.0";
 
   public static final String NUMBER_OF_PLAYERS = "numberOfPlayers";
 
