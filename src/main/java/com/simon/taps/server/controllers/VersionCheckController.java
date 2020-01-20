@@ -4,15 +4,23 @@ import java.util.HashMap;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simon.taps.server.util.ResponseErrorsUtil;
 import com.simon.taps.server.util.ServerUtil;
 
 @RestController
 public class VersionCheckController {
 
   @GetMapping("/version/{version}")
-  public HashMap<String, Object> checkVersion(@PathVariable final String version) {
+  public HashMap<String, Object> checkVersion(@PathVariable final String version,
+      @RequestHeader(value = ServerUtil.AUTHENTICATION_HEADER,
+          required = false) final String authKey) {
+
+    if (!ServerUtil.AUTHENTICATION_KEY.equals(authKey)) {
+      return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.FORBIDDEN);
+    }
 
     String currentVersion = version;
     int majorCurrent = Integer.valueOf(currentVersion.substring(0, currentVersion.indexOf(".")));
