@@ -2,6 +2,10 @@ package com.simon.taps.server.util;
 
 public class ServerUtil {
 
+  public static final String AUTHENTICATION_HEADER = "Simon-Auth";
+
+  public static final String AUTHENTICATION_KEY = "rEJ1ME7MaojA4CPIOG2wJ3tX4U7lHAIgJqX6XGT3";
+
   public static final String ERROR = "ERROR";
 
   public static final String GAME_STATE = "gameState";

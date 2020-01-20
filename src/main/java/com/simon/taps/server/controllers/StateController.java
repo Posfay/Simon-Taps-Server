@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simon.taps.server.database.DatabaseUtil;
@@ -88,7 +89,12 @@ public class StateController {
 
   @GetMapping("/state/{roomId}/{playerId}")
   public HashMap<String, Object> getState(@PathVariable final String roomId,
-      @PathVariable final String playerId) {
+      @PathVariable final String playerId,
+      @RequestHeader(ServerUtil.AUTHENTICATION_HEADER) final String authKey) {
+
+    if (!authKey.equals(ServerUtil.AUTHENTICATION_KEY)) {
+      return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.FORBIDDEN);
+    }
 
     if (!checkPlayerAndRoomExists(roomId, playerId)) {
       return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.INTERNAL_ERROR);

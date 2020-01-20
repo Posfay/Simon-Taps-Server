@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simon.taps.server.database.DatabaseUtil;
@@ -44,7 +45,12 @@ public class JoinController {
   }
 
   @PostMapping("/join")
-  public HashMap<String, Object> postJoin(@Valid @RequestBody final PostRequestWrapper postBody) {
+  public HashMap<String, Object> postJoin(@Valid @RequestBody final PostRequestWrapper postBody,
+      @RequestHeader(ServerUtil.AUTHENTICATION_HEADER) final String authKey) {
+
+    if (!authKey.equals(ServerUtil.AUTHENTICATION_KEY)) {
+      return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.FORBIDDEN);
+    }
 
     boolean roomExists = this.roomRepository.existsById(postBody.getRoomId());
 

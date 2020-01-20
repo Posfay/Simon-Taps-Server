@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simon.taps.server.database.Player;
@@ -29,7 +30,12 @@ public class LeaveController {
 
   @PostMapping("/leave")
   public HashMap<String, Object> leaveRoom(
-      @Valid @RequestBody final LeavePostRequestWrapper postBody) {
+      @Valid @RequestBody final LeavePostRequestWrapper postBody,
+      @RequestHeader(ServerUtil.AUTHENTICATION_HEADER) final String authKey) {
+
+    if (!authKey.equals(ServerUtil.AUTHENTICATION_KEY)) {
+      return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.FORBIDDEN);
+    }
 
     Player player = this.playerRepository.findById(postBody.getPlayerId()).get();
     Room room = this.roomRepository.findById(player.getRoomId()).get();
