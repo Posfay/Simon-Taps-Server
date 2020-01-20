@@ -42,9 +42,10 @@ public class GameController {
 
   @PostMapping("/game")
   public HashMap<String, Object> postGame(@Valid @RequestBody final PostRequestWrapper postBody,
-      @RequestHeader(ServerUtil.AUTHENTICATION_HEADER) final String authKey) {
+      @RequestHeader(value = ServerUtil.AUTHENTICATION_HEADER,
+          required = false) final String authKey) {
 
-    if (!authKey.equals(ServerUtil.AUTHENTICATION_KEY)) {
+    if (!ServerUtil.AUTHENTICATION_KEY.equals(authKey)) {
       return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.FORBIDDEN);
     }
 

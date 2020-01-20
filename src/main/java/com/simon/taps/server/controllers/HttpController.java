@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simon.taps.server.database.Player;
 import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
 import com.simon.taps.server.database.RoomRepository;
+import com.simon.taps.server.util.ResponseErrorsUtil;
+import com.simon.taps.server.util.ServerUtil;
 
 @RestController
 public class HttpController {
@@ -68,7 +71,13 @@ public class HttpController {
   }
 
   @GetMapping("/json")
-  public HashMap<String, Object> getTestJson() {
+  public HashMap<String, Object> getTestJson(
+      @RequestHeader(value = ServerUtil.AUTHENTICATION_HEADER,
+          required = false) final String authKey) {
+
+    if (!ServerUtil.AUTHENTICATION_KEY.equals(authKey)) {
+      return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.FORBIDDEN);
+    }
 
     HashMap<String, Object> map = new HashMap<>();
 
