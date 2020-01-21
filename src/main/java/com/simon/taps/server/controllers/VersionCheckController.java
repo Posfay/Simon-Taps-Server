@@ -36,17 +36,12 @@ public class VersionCheckController {
     minVersion = minVersion.substring(minVersion.indexOf(".") + 1);
     int patchMin = Integer.valueOf(minVersion);
 
-    boolean compatible = true;
+    boolean compatible = false;
 
-    if (!(majorCurrent >= majorMin)) {
-
-      compatible = false;
-    } else if (!(minorCurrent >= minorMin)) {
-
-      compatible = false;
-    } else if (!(patchCurrent >= patchMin)) {
-
-      compatible = false;
+    if ((majorCurrent > majorMin) || ((majorCurrent == majorMin) && (minorCurrent > minorMin))
+        || ((majorCurrent == majorMin) && (minorCurrent == minorMin)
+            && (patchCurrent >= patchMin))) {
+      compatible = true;
     }
 
     HashMap<String, Object> responseMap = new HashMap<>();
