@@ -184,6 +184,54 @@
  
   * TODO
 
+**Restart**
+----
+  Újrakezdés ugyanazokkal a játékosokkal
+
+* **URL**
+
+  /restart
+
+* **Method:**
+
+  `POST`
+  
+*  **JSON Params**
+
+   `roomId:[string]`
+   
+   `playerId:[string]`
+
+* **Success Response:**
+
+  * **Case:** Success<br />
+    * **Content:** `{ status: 'OK', numberOfRestartPlayers: [int] }`
+
+* **Error Response:**
+
+  * TODO
+
+**Get version check**
+----
+  Kliens verziójának ellenőrzése
+
+* **URL**
+
+  /version/{version}
+
+* **Method:**
+
+  `GET`
+  
+* **Success Response:**
+
+  * **Case:** Passed version check <br />
+    * **Content:** `{ status: 'OK', compatible: [boolean] }`
+
+* **Error Response:**
+  
+  * **Case:** Failed version check <br />
+    * **Content:** `{ status: 'ERROR', reason: 'FORBIDDEN' }`
 
 **Game States**
 ----
