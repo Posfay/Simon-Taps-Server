@@ -1,5 +1,6 @@
 package com.simon.taps.server.database;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.simon.taps.server.util.GameUtil;
 
 @Component
 public class DatabaseUtil {
@@ -16,6 +19,28 @@ public class DatabaseUtil {
 
   @Autowired
   private RoomRepository roomRepository;
+
+  public Player createDefaultPlayer() {
+
+    Player newPlayer = new Player();
+    newPlayer.setTileId(null);
+    newPlayer.setReady(false);
+    newPlayer.setRestartReady(false);
+
+    return newPlayer;
+  }
+
+  public Room createDefaultRoom() {
+
+    Room newRoom = new Room();
+    newRoom.setPattern("");
+    newRoom.setPatternCompleted("");
+    newRoom.setRound(GameUtil.FIRST_ROUND_LENGTH);
+    newRoom.setState(GameUtil.WAITING);
+    newRoom.setTimer(LocalDateTime.now());
+
+    return newRoom;
+  }
 
   @Transactional
   public void generateTileIds(final String roomId, final String playerId) {
@@ -45,6 +70,15 @@ public class DatabaseUtil {
 
     this.roomRepository.save(room);
     this.playerRepository.save(newPlayer);
+  }
+
+  @Transactional
+  public void saveRoomAndPlayers(final Room room, final List<Player> players) {
+
+    this.roomRepository.save(room);
+    for (Player player : players) {
+      this.playerRepository.save(player);
+    }
   }
 
 }

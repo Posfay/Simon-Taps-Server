@@ -70,11 +70,9 @@ public class JoinController {
         return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.ROOM_IS_FULL);
       }
 
-      Player newPlayer = new Player();
+      Player newPlayer = this.databaseUtil.createDefaultPlayer();
       newPlayer.setId(postBody.getPlayerId());
       newPlayer.setRoomId(postBody.getRoomId());
-      newPlayer.setTileId(null);
-      newPlayer.setReady(false);
 
       if (++playersInRoom >= 4) {
 

@@ -18,6 +18,8 @@ public class ServerUtil {
 
   public static final String NUMBER_OF_PLAYERS = "numberOfPlayers";
 
+  public static final String NUMBER_OF_RESTART_PLAYERS = "numberOfRestartPlayers";
+
   public static final String OK = "OK";
 
   public static final String PATTERN = "pattern";

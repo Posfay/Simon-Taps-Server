@@ -59,19 +59,12 @@ public class CreateRoomController {
       return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.ROOM_ALREADY_EXISTS);
     }
 
-    Room newRoom = new Room();
+    Room newRoom = this.databaseUtil.createDefaultRoom();
     newRoom.setId(postBody.getRoomId());
-    newRoom.setPattern("");
-    newRoom.setPatternCompleted("");
-    newRoom.setRound(GameUtil.FIRST_ROUND_LENGTH);
-    newRoom.setState(GameUtil.WAITING);
-    newRoom.setTimer(LocalDateTime.now());
 
-    Player newPlayer = new Player();
+    Player newPlayer = this.databaseUtil.createDefaultPlayer();
     newPlayer.setId(postBody.getPlayerId());
     newPlayer.setRoomId(postBody.getRoomId());
-    newPlayer.setTileId(null);
-    newPlayer.setReady(false);
 
     this.databaseUtil.saveRoomAndPlayer(newRoom, newPlayer);
 

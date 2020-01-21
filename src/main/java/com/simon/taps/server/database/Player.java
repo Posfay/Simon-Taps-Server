@@ -15,6 +15,9 @@ public class Player {
   @Column(name = "ready")
   private Boolean ready;
 
+  @Column(name = "restart_ready")
+  private Boolean restartReady;
+
   @Column(name = "room_id")
   private String roomId;
 
@@ -27,6 +30,10 @@ public class Player {
 
   public Boolean getReady() {
     return this.ready;
+  }
+
+  public Boolean getRestartReady() {
+    return this.restartReady;
   }
 
   public String getRoomId() {
@@ -43,6 +50,10 @@ public class Player {
 
   public void setReady(final Boolean ready) {
     this.ready = ready;
+  }
+
+  public void setRestartReady(final Boolean restartReady) {
+    this.restartReady = restartReady;
   }
 
   public void setRoomId(final String roomId) {
