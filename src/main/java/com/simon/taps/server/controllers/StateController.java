@@ -185,6 +185,7 @@ public class StateController {
       return responseMap;
     }
 
+    // PREPARING
     Player player = this.playerRepository.findById(playerId).get();
 
     if (player.getTileId() == null) {

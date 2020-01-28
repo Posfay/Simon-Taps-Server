@@ -70,7 +70,7 @@ public class RestartController {
         room.setPattern("");
         room.setPatternCompleted("");
         room.setRound(GameUtil.FIRST_ROUND_LENGTH);
-        room.setState(GameUtil.WAITING);
+        room.setState(GameUtil.PREPARING);
         room.setTimer(LocalDateTime.now());
 
         List<Player> toBeSavedPlayers = new ArrayList<>();
