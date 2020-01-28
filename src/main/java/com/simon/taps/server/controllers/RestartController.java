@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.simon.taps.server.database.DatabaseUtil;
 import com.simon.taps.server.database.Player;
@@ -23,6 +24,7 @@ import com.simon.taps.server.util.ResponseErrorsUtil;
 import com.simon.taps.server.util.ServerUtil;
 import com.simon.taps.server.wrappers.PostRequestWrapper;
 
+@RestController
 public class RestartController {
 
   @Autowired
