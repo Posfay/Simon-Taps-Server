@@ -19,7 +19,7 @@ public class CouponUtil {
     for (int i = 0; i < numberOfCoupons; i++) {
 
       String uuidStr = UUID.randomUUID().toString();
-      uuidStr.replace("-", "");
+      uuidStr = uuidStr.replace("-", "");
       String couponStr = "";
 
       for (int j = 0; j < CouponUtil.COUPON_LENGTH; j++) {
@@ -28,7 +28,7 @@ public class CouponUtil {
         couponStr += uuidStr.charAt(randomIndex);
       }
 
-      couponStr.toUpperCase();
+      couponStr = couponStr.toUpperCase();
 
       Coupon coupon = new Coupon();
       coupon.setId(couponStr);

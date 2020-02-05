@@ -2,6 +2,7 @@ package com.simon.taps.server.controllers.coupons;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -45,10 +46,13 @@ public class CreateCouponController {
 
     this.couponRepository.saveAll(coupons);
 
+    List<String> couponsStr =
+        coupons.stream().map(coupon -> coupon.getId()).collect(Collectors.toList());
+
     HashMap<String, Object> responseMap = new HashMap<>();
 
     responseMap.put(ServerUtil.STATUS, ServerUtil.OK);
-    responseMap.put(ServerUtil.COUPONS, coupons);
+    responseMap.put(ServerUtil.COUPONS, couponsStr);
 
     return responseMap;
   }
