@@ -1,9 +1,9 @@
-package com.simon.taps.server.controllers;
+package com.simon.taps.server.controllers.game;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 
-import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import com.simon.taps.server.util.ServerUtil;
 import com.simon.taps.server.wrappers.PostRequestWrapper;
 
 @RestController
-public class JoinController {
+public class CreateRoomController {
 
   @Autowired
   private DatabaseUtil databaseUtil;
@@ -44,8 +44,8 @@ public class JoinController {
     return responseMap;
   }
 
-  @PostMapping("/join")
-  public HashMap<String, Object> postJoin(@Valid @RequestBody final PostRequestWrapper postBody,
+  @PostMapping("/create")
+  public HashMap<String, Object> createRoom(@Valid @RequestBody final PostRequestWrapper postBody,
       @RequestHeader(value = ServerUtil.AUTHENTICATION_HEADER,
           required = false) final String authKey) {
 
@@ -55,41 +55,38 @@ public class JoinController {
 
     boolean roomExists = this.roomRepository.existsById(postBody.getRoomId());
 
-    if (!roomExists) {
-      return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.ROOM_DOES_NOT_EXIST);
+    if (roomExists) {
+      return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.ROOM_ALREADY_EXISTS);
     }
 
-    long playersInRoom = 0;
+    Room newRoom = this.databaseUtil.createDefaultRoom();
+    newRoom.setId(postBody.getRoomId());
 
-    while (true) {
+    Player newPlayer = this.databaseUtil.createDefaultPlayer();
+    newPlayer.setId(postBody.getPlayerId());
+    newPlayer.setRoomId(postBody.getRoomId());
 
-      playersInRoom = this.playerRepository.findByRoomId(postBody.getRoomId()).size();
-      Room room = this.roomRepository.findById(postBody.getRoomId()).get();
+    this.databaseUtil.saveRoomAndPlayer(newRoom, newPlayer);
 
-      if (playersInRoom >= 4) {
-        return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.ROOM_IS_FULL);
-      }
+    roomGarbageCollection();
 
-      Player newPlayer = this.databaseUtil.createDefaultPlayer();
-      newPlayer.setId(postBody.getPlayerId());
-      newPlayer.setRoomId(postBody.getRoomId());
-
-      if (++playersInRoom >= 4) {
-
-        room.setState(GameUtil.PREPARING);
-        room.setTimer(LocalDateTime.now());
-      }
-
-      try {
-        this.databaseUtil.saveRoomAndPlayer(room, newPlayer);
-      } catch (OptimisticLockException ignore) {
-        continue;
-      }
-
-      break;
-    }
-
-    return craftResponse(playersInRoom);
+    return craftResponse(1);
   }
 
+  public void roomGarbageCollection() {
+
+    List<Room> rooms = this.roomRepository.findAll();
+
+    for (Room room : rooms) {
+
+      LocalDateTime nowMinusIdle = LocalDateTime.now().minusMinutes(GameUtil.MAX_ROOM_IDLE_MINUTES);
+
+      if (room.getTimer().isBefore(nowMinusIdle)) {
+
+        List<Player> playersOfRoom = this.playerRepository.findByRoomId(room.getId());
+        this.playerRepository.deleteAll(playersOfRoom);
+        this.roomRepository.delete(room);
+      }
+    }
+  }
 }

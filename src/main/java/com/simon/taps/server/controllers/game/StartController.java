@@ -1,7 +1,6 @@
-package com.simon.taps.server.controllers;
+package com.simon.taps.server.controllers.game;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.simon.taps.server.database.DatabaseUtil;
 import com.simon.taps.server.database.Player;
 import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
@@ -25,10 +23,7 @@ import com.simon.taps.server.util.ServerUtil;
 import com.simon.taps.server.wrappers.PostRequestWrapper;
 
 @RestController
-public class RestartController {
-
-  @Autowired
-  private DatabaseUtil databaseUtil;
+public class StartController {
 
   @Autowired
   private PlayerRepository playerRepository;
@@ -36,9 +31,8 @@ public class RestartController {
   @Autowired
   private RoomRepository roomRepository;
 
-  @PostMapping("/restart")
-  public HashMap<String, Object> restart(
-      @Valid @RequestBody final PostRequestWrapper postBody,
+  @PostMapping("/start")
+  public HashMap<String, Object> postStart(@Valid @RequestBody final PostRequestWrapper postBody,
       @RequestHeader(value = ServerUtil.AUTHENTICATION_HEADER,
           required = false) final String authKey) {
 
@@ -46,48 +40,32 @@ public class RestartController {
       return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.FORBIDDEN);
     }
 
-    long countOfRestartReady = 0;
-
     while (true) {
 
       Player currentPlayer = this.playerRepository.findById(postBody.getPlayerId()).get();
       Room room = this.roomRepository.findById(postBody.getRoomId()).get();
 
-      currentPlayer.setRestartReady(true);
+      currentPlayer.setReady(true);
 
       currentPlayer = this.playerRepository.save(currentPlayer);
 
       List<Player> playersInRoom = this.playerRepository.findByRoomId(postBody.getRoomId());
 
-      countOfRestartReady = 0;
+      long countOfReady = 0;
 
       for (Player player : playersInRoom) {
-        if (player.getRestartReady()) {
-          countOfRestartReady++;
+        if (player.getReady()) {
+          countOfReady++;
         }
       }
 
-      if (countOfRestartReady == 4) {
+      if (countOfReady == 4) {
 
-        room.setPattern("");
-        room.setPatternCompleted("");
-        room.setRound(GameUtil.FIRST_ROUND_LENGTH);
-        room.setState(GameUtil.PREPARING);
+        room.setState(GameUtil.PLAYING);
         room.setTimer(LocalDateTime.now());
 
-        List<Player> toBeSavedPlayers = new ArrayList<>();
-
-        for (Player player : playersInRoom) {
-
-          player.setTileId(null);
-          player.setReady(false);
-          player.setRestartReady(false);
-
-          toBeSavedPlayers.add(player);
-        }
-
         try {
-          this.databaseUtil.saveRoomAndPlayers(room, toBeSavedPlayers);
+          room = this.roomRepository.save(room);
         } catch (OptimisticLockException ignore) {
           continue;
         }
@@ -107,8 +85,8 @@ public class RestartController {
 
     HashMap<String, Object> responseMap = new HashMap<>();
     responseMap.put(ServerUtil.STATUS, ServerUtil.OK);
-    responseMap.put(ServerUtil.NUMBER_OF_RESTART_PLAYERS, countOfRestartReady);
 
     return responseMap;
   }
+
 }

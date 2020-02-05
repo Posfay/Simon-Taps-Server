@@ -1,4 +1,4 @@
-package com.simon.taps.server.controllers;
+package com.simon.taps.server.controllers.game;
 
 import java.util.HashMap;
 
