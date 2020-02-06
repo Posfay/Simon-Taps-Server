@@ -47,6 +47,7 @@ public class CheckCouponController {
     responseMap.put(ServerUtil.STATUS, ServerUtil.OK);
     responseMap.put(ServerUtil.COUPON_ACTIVE, coupon.getActive());
     responseMap.put(ServerUtil.COUPON_ISSUED, coupon.getIssued());
+    responseMap.put(ServerUtil.COUPON_ID, coupon.getId());
 
     return responseMap;
   }

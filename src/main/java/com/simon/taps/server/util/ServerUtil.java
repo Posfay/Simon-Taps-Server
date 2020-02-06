@@ -10,6 +10,8 @@ public class ServerUtil {
 
   public static final String COUPON_ACTIVE = "couponActive";
 
+  public static final String COUPON_ID = "couponId";
+
   public static final String COUPON_ISSUED = "couponIssued";
 
   public static final String COUPONS = "coupons";
