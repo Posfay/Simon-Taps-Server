@@ -24,7 +24,7 @@ public class ServerUtil {
 
   public static final String LEFT = "left";
 
-  public static final String MIN_COMPATIBLE_VERSION = "1.2.5";
+  public static final String MIN_COMPATIBLE_VERSION = "1.9.0";
 
   public static final String NUMBER_OF_PLAYERS = "numberOfPlayers";
 

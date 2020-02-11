@@ -55,12 +55,7 @@ public class StateController {
 
   private HashMap<String, Object> endState(final Room room, final String playerId) {
 
-    long wonRoundNumber = room.getRound() - 1;
-
-    // enough points -> coupons
-    if (wonRoundNumber >= GameUtil.MIN_SCORE_TO_EARN_COUPON) {
-      tryToIssueCoupons(room, playerId);
-    }
+    this.databaseUtil.tryToIssueCoupons(room, playerId);
 
     // might be null because of not achieving enough points or reaching daily limit
     String currentCoupon = this.playerRepository.findById(playerId).get().getCoupon();
@@ -137,7 +132,7 @@ public class StateController {
     // ----------------------------------PLAYING----------------------------------------------------
     if (room.getState().equals(GameUtil.PLAYING)) {
 
-      return playingState(room);
+      return playingState(room, playerId);
     }
 
     // ----------------------------------FAIL_END---------------------------------------------------
@@ -149,7 +144,7 @@ public class StateController {
     return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.INTERNAL_ERROR);
   }
 
-  private HashMap<String, Object> playingState(final Room room) {
+  private HashMap<String, Object> playingState(final Room room, final String playerId) {
 
     LocalDateTime nowMinusSec = LocalDateTime.now().minusSeconds(GameUtil.WAIT_BETWEEN_2_CLICKS);
     LocalDateTime timerStart = room.getTimer();
@@ -159,8 +154,7 @@ public class StateController {
       room.setState(GameUtil.END);
       this.roomRepository.save(room);
 
-      HashMap<String, Object> responseMap = craftResponse(GameUtil.END);
-      return responseMap;
+      return endState(room, playerId);
     }
 
     HashMap<String, Object> responseMap = craftResponse(GameUtil.PLAYING);
@@ -217,20 +211,6 @@ public class StateController {
     HashMap<String, Object> responseMap = craftResponse(GameUtil.SHOWING_PATTERN);
     responseMap.put(ServerUtil.PATTERN, room.getPattern().substring(0, (int) round));
     return responseMap;
-  }
-
-  private void tryToIssueCoupons(final Room room, final String playerId) {
-
-    Player player = this.playerRepository.findById(playerId).get();
-
-    if (player.getCoupon() == null) {
-
-      try {
-        this.databaseUtil.issueCoupons(room.getId(), playerId);
-      } catch (Exception ignore) {
-        // optimistic locking -> go forward
-      }
-    }
   }
 
   private HashMap<String, Object> waitingState(final String roomId) {

@@ -84,52 +84,44 @@ public class DatabaseUtil {
   }
 
   @Transactional
-  public void issueCoupons(final String roomId, final String playerId) {
+  public void issueCoupons(final String playerId) {
 
-    List<Player> playersInRoom = this.playerRepository.findByRoomId(roomId);
-    Room room = this.roomRepository.findById(roomId).get();
+    Player player = this.playerRepository.findById(playerId).get();
+    User user = this.userRepository.findById(playerId).get();
 
-    for (Player player : playersInRoom) {
+    // New day -> resetting daily wins
+    if (user.getLastWon().getDayOfYear() != LocalDateTime.now().getDayOfYear()) {
+      user.setWonToday(0L);
+    }
 
-      User user = this.userRepository.findById(playerId).get();
+    user.setLastWon(LocalDateTime.now());
 
-      // New day -> resetting daily wins
-      if (user.getLastWon().getDayOfYear() != LocalDateTime.now().getDayOfYear()) {
-        user.setWonToday(0L);
-      }
+    // DID NOT reach daily limit (or admin) -> get coupon
+    if ((user.getWonToday() < GameUtil.MAX_COUPONS_PER_DAY) || user.getAdmin()) {
 
-      user.setLastWon(LocalDateTime.now());
+      String couponStr;
 
-      // DID NOT reach daily limit (or admin) -> get coupon
-      if ((user.getWonToday() < GameUtil.MAX_COUPONS_PER_DAY) || user.getAdmin()) {
+      while (true) {
 
-        String couponStr;
+        couponStr = CouponUtil.createCouponStr();
+        boolean exists = this.couponRepository.existsById(couponStr);
 
-        while (true) {
-
-          couponStr = CouponUtil.createCouponStr();
-          boolean exists = this.couponRepository.existsById(couponStr);
-
-          if (!exists) {
-            break;
-          }
+        if (!exists) {
+          break;
         }
-
-        player.setCoupon(couponStr);
-        this.playerRepository.save(player);
-
-        user.setWonToday(user.getWonToday() + 1);
-
-        Coupon coupon = new Coupon();
-        coupon.setId(couponStr);
-        coupon.setActive(true);
-        coupon.setIssued(true);
-        coupon.setUserId(user.getId());
-        this.couponRepository.save(coupon);
       }
 
-      // for optimistic locking
-      room = this.roomRepository.save(room);
+      player.setCoupon(couponStr);
+      player = this.playerRepository.save(player);
+
+      user.setWonToday(user.getWonToday() + 1);
+
+      Coupon coupon = new Coupon();
+      coupon.setId(couponStr);
+      coupon.setActive(true);
+      coupon.setIssued(true);
+      coupon.setUserId(user.getId());
+      coupon = this.couponRepository.save(coupon);
     }
   }
 
@@ -146,6 +138,23 @@ public class DatabaseUtil {
     this.roomRepository.save(room);
     for (Player player : players) {
       this.playerRepository.save(player);
+    }
+  }
+
+  public void tryToIssueCoupons(final Room room, final String playerId) {
+
+    long wonRoundNumber = room.getRound() - 1;
+
+    // NOT enough points -> NO coupons
+    if (!(wonRoundNumber >= GameUtil.MIN_SCORE_TO_EARN_COUPON)) {
+      return;
+    }
+
+    Player player = this.playerRepository.findById(playerId).get();
+
+    if (player.getCoupon() == null) {
+
+      issueCoupons(playerId);
     }
   }
 

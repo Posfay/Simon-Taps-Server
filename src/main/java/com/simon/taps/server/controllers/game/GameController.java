@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simon.taps.server.database.DatabaseUtil;
 import com.simon.taps.server.database.Player;
 import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
@@ -23,6 +24,9 @@ import com.simon.taps.server.wrappers.PostRequestWrapper;
 
 @RestController
 public class GameController {
+
+  @Autowired
+  private DatabaseUtil databaseUtil;
 
   @Autowired
   private PlayerRepository playerRepository;
@@ -65,13 +69,22 @@ public class GameController {
 
     room = this.roomRepository.save(room);
 
-    // Jo es utolso -> SUCCESSFUL END
+    // Jo es utolso -> END
     if (correct && (newPattern.length() == room.getPattern().length())) {
 
       room.setState(GameUtil.END);
       room = this.roomRepository.save(room);
 
-      return craftResponse(GameUtil.END);
+      this.databaseUtil.tryToIssueCoupons(room, player.getId());
+
+      // might be null because of not achieving enough points or reaching daily limit
+      String currentCoupon = this.playerRepository.findById(player.getId()).get().getCoupon();
+
+      HashMap<String, Object> responseMap = craftResponse(GameUtil.END);
+
+      responseMap.put(ServerUtil.COUPON, currentCoupon);
+
+      return responseMap;
     }
 
     // Jo es round vege -> uj round
@@ -97,7 +110,7 @@ public class GameController {
       return craftResponse(GameUtil.PLAYING);
     }
 
-    // Rossz -> FAIL_END
+    // Rossz -> END
     else {
 
       room.setState(GameUtil.END);

@@ -82,6 +82,7 @@ public class RestartController {
           player.setTileId(null);
           player.setReady(false);
           player.setRestartReady(false);
+          player.setCoupon(null);
 
           toBeSavedPlayers.add(player);
         }
