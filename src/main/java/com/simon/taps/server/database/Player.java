@@ -9,6 +9,9 @@ import javax.persistence.Table;
 @Table(name = "players")
 public class Player {
 
+  @Column(name = "coupon")
+  private String coupon;
+
   @Id
   private String id;
 
@@ -23,6 +26,10 @@ public class Player {
 
   @Column(name = "tile_id")
   private String tileId;
+
+  public String getCoupon() {
+    return this.coupon;
+  }
 
   public String getId() {
     return this.id;
@@ -42,6 +49,10 @@ public class Player {
 
   public String getTileId() {
     return this.tileId;
+  }
+
+  public void setCoupon(final String coupon) {
+    this.coupon = coupon;
   }
 
   public void setId(final String id) {

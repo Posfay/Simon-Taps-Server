@@ -18,6 +18,9 @@ public class Coupon {
   @Column(name = "issued")
   private Boolean issued;
 
+  @Column(name = "user_id")
+  private String userId;
+
   public Boolean getActive() {
     return this.active;
   }
@@ -30,6 +33,10 @@ public class Coupon {
     return this.issued;
   }
 
+  public String getUserId() {
+    return this.userId;
+  }
+
   public void setActive(final Boolean active) {
     this.active = active;
   }
@@ -40,6 +47,10 @@ public class Coupon {
 
   public void setIssued(final Boolean issued) {
     this.issued = issued;
+  }
+
+  public void setUserId(final String userId) {
+    this.userId = userId;
   }
 
 }

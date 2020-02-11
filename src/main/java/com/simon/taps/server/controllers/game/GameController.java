@@ -68,10 +68,10 @@ public class GameController {
     // Jo es utolso -> SUCCESSFUL END
     if (correct && (newPattern.length() == room.getPattern().length())) {
 
-      room.setState(GameUtil.SUCCESSFUL_END);
+      room.setState(GameUtil.END);
       room = this.roomRepository.save(room);
 
-      return craftResponse(GameUtil.SUCCESSFUL_END);
+      return craftResponse(GameUtil.END);
     }
 
     // Jo es round vege -> uj round
@@ -100,10 +100,10 @@ public class GameController {
     // Rossz -> FAIL_END
     else {
 
-      room.setState(GameUtil.FAIL_END);
+      room.setState(GameUtil.END);
       this.roomRepository.save(room);
 
-      return craftResponse(GameUtil.FAIL_END);
+      return craftResponse(GameUtil.END);
     }
   }
 }

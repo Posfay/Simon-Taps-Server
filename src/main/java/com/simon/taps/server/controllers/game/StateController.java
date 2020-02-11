@@ -53,13 +53,26 @@ public class StateController {
     return responseMap;
   }
 
-  private HashMap<String, Object> failEndState() {
+  private HashMap<String, Object> endState(final Room room, final String playerId) {
 
-    HashMap<String, Object> responseMap = craftResponse(GameUtil.FAIL_END);
+    long wonRoundNumber = room.getRound() - 1;
+
+    // enough points -> coupons
+    if (wonRoundNumber >= GameUtil.MIN_SCORE_TO_EARN_COUPON) {
+      tryToIssueCoupons(room, playerId);
+    }
+
+    // might be null because of not achieving enough points or reaching daily limit
+    String currentCoupon = this.playerRepository.findById(playerId).get().getCoupon();
+
+    HashMap<String, Object> responseMap = craftResponse(GameUtil.END);
+
+    responseMap.put(ServerUtil.COUPON, currentCoupon);
+
     return responseMap;
   }
 
-  private void generatePattern(final String roomId) {
+  private void generatePattern(final String roomId) throws Exception {
 
     List<Long> pattern = new ArrayList<>();
     for (int i = 0; i < ((GameUtil.MAX_PATTERN_LENGTH / 4) + 1); i++) {
@@ -128,15 +141,9 @@ public class StateController {
     }
 
     // ----------------------------------FAIL_END---------------------------------------------------
-    if (room.getState().equals(GameUtil.FAIL_END)) {
+    if (room.getState().equals(GameUtil.END)) {
 
-      return failEndState();
-    }
-
-    // ----------------------------------SUCCESSFUL_END---------------------------------------------
-    if (room.getState().equals(GameUtil.SUCCESSFUL_END)) {
-
-      return successfulEndState();
+      return endState(room, playerId);
     }
 
     return ResponseErrorsUtil.errorResponse(ResponseErrorsUtil.Error.INTERNAL_ERROR);
@@ -149,10 +156,10 @@ public class StateController {
 
     if (nowMinusSec.isAfter(timerStart)) {
 
-      room.setState(GameUtil.FAIL_END);
+      room.setState(GameUtil.END);
       this.roomRepository.save(room);
 
-      HashMap<String, Object> responseMap = craftResponse(GameUtil.FAIL_END);
+      HashMap<String, Object> responseMap = craftResponse(GameUtil.END);
       return responseMap;
     }
 
@@ -212,10 +219,18 @@ public class StateController {
     return responseMap;
   }
 
-  private HashMap<String, Object> successfulEndState() {
+  private void tryToIssueCoupons(final Room room, final String playerId) {
 
-    HashMap<String, Object> responseMap = craftResponse(GameUtil.SUCCESSFUL_END);
-    return responseMap;
+    Player player = this.playerRepository.findById(playerId).get();
+
+    if (player.getCoupon() == null) {
+
+      try {
+        this.databaseUtil.issueCoupons(room.getId(), playerId);
+      } catch (Exception ignore) {
+        // optimistic locking -> go forward
+      }
+    }
   }
 
   private HashMap<String, Object> waitingState(final String roomId) {

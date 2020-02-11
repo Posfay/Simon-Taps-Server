@@ -11,6 +11,9 @@ import javax.persistence.Table;
 @Table(name = "users")
 public class User {
 
+  @Column(name = "admin")
+  private Boolean admin;
+
   @Id
   private String id;
 
@@ -19,6 +22,10 @@ public class User {
 
   @Column(name = "won_today")
   private Long wonToday;
+
+  public Boolean getAdmin() {
+    return this.admin;
+  }
 
   public String getId() {
     return this.id;
@@ -30,6 +37,10 @@ public class User {
 
   public Long getWonToday() {
     return this.wonToday;
+  }
+
+  public void setAdmin(final Boolean admin) {
+    this.admin = admin;
   }
 
   public void setId(final String id) {

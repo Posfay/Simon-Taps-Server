@@ -17,6 +17,8 @@ import com.simon.taps.server.database.Player;
 import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
 import com.simon.taps.server.database.RoomRepository;
+import com.simon.taps.server.database.User;
+import com.simon.taps.server.database.UserRepository;
 import com.simon.taps.server.util.GameUtil;
 import com.simon.taps.server.util.ResponseErrorsUtil;
 import com.simon.taps.server.util.ServerUtil;
@@ -33,6 +35,9 @@ public class CreateRoomController {
 
   @Autowired
   private RoomRepository roomRepository;
+
+  @Autowired
+  private UserRepository userRepository;
 
   private HashMap<String, Object> craftResponse(final long playersInRoom) {
 
@@ -66,6 +71,17 @@ public class CreateRoomController {
     newPlayer.setId(postBody.getPlayerId());
     newPlayer.setRoomId(postBody.getRoomId());
 
+    boolean existsUser = this.userRepository.existsById(newPlayer.getId());
+
+    // create user in User table
+    if (!existsUser) {
+
+      User newUser = this.databaseUtil.createDefaultUser();
+      newUser.setId(newPlayer.getId());
+
+      this.userRepository.save(newUser);
+    }
+
     this.databaseUtil.saveRoomAndPlayer(newRoom, newPlayer);
 
     roomGarbageCollection();
@@ -79,7 +95,7 @@ public class CreateRoomController {
 
     for (Room room : rooms) {
 
-      LocalDateTime nowMinusIdle = LocalDateTime.now().minusMinutes(GameUtil.MAX_ROOM_IDLE_MINUTES);
+      LocalDateTime nowMinusIdle = LocalDateTime.now().minusMinutes(GameUtil.MAX_ROOM_IDLE_MIN);
 
       if (room.getTimer().isBefore(nowMinusIdle)) {
 

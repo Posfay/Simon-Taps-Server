@@ -17,6 +17,8 @@ import com.simon.taps.server.database.Player;
 import com.simon.taps.server.database.PlayerRepository;
 import com.simon.taps.server.database.Room;
 import com.simon.taps.server.database.RoomRepository;
+import com.simon.taps.server.database.User;
+import com.simon.taps.server.database.UserRepository;
 import com.simon.taps.server.util.GameUtil;
 import com.simon.taps.server.util.ResponseErrorsUtil;
 import com.simon.taps.server.util.ServerUtil;
@@ -33,6 +35,9 @@ public class JoinController {
 
   @Autowired
   private RoomRepository roomRepository;
+
+  @Autowired
+  private UserRepository userRepository;
 
   private HashMap<String, Object> craftResponse(final long playersInRoom) {
 
@@ -73,6 +78,17 @@ public class JoinController {
       Player newPlayer = this.databaseUtil.createDefaultPlayer();
       newPlayer.setId(postBody.getPlayerId());
       newPlayer.setRoomId(postBody.getRoomId());
+
+      boolean existsUser = this.userRepository.existsById(newPlayer.getId());
+
+      // create user in User table
+      if (!existsUser) {
+
+        User newUser = this.databaseUtil.createDefaultUser();
+        newUser.setId(newPlayer.getId());
+
+        this.userRepository.save(newUser);
+      }
 
       if (++playersInRoom >= 4) {
 

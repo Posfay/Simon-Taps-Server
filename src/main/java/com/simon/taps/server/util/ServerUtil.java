@@ -8,6 +8,8 @@ public class ServerUtil {
 
   public static final String COMPATIBLE_VERSION = "compatible";
 
+  public static final String COUPON = "coupon";
+
   public static final String COUPON_ACTIVE = "couponActive";
 
   public static final String COUPON_ID = "couponId";
