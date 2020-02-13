@@ -1,5 +1,6 @@
 package com.simon.taps.server.util;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +20,7 @@ public class CouponUtil {
     Coupon coupon = new Coupon();
     coupon.setId(couponStr);
     coupon.setActive(true);
+    coupon.setExpireAt(LocalDateTime.now().plusDays(GameUtil.COUPON_LIFETIME_DAY));
     coupon.setIssued(false);
     coupon.setUserId(null);
 

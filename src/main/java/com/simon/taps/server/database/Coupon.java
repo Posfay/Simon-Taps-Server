@@ -1,5 +1,7 @@
 package com.simon.taps.server.database;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +14,9 @@ public class Coupon {
   @Column(name = "active")
   private Boolean active;
 
+  @Column(name = "expire_at")
+  private LocalDateTime expireAt;
+
   @Id
   private String id;
 
@@ -23,6 +28,10 @@ public class Coupon {
 
   public Boolean getActive() {
     return this.active;
+  }
+
+  public LocalDateTime getExpireAt() {
+    return this.expireAt;
   }
 
   public String getId() {
@@ -39,6 +48,10 @@ public class Coupon {
 
   public void setActive(final Boolean active) {
     this.active = active;
+  }
+
+  public void setExpireAt(final LocalDateTime expireAt) {
+    this.expireAt = expireAt;
   }
 
   public void setId(final String id) {

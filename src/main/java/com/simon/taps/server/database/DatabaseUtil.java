@@ -119,6 +119,7 @@ public class DatabaseUtil {
       Coupon coupon = new Coupon();
       coupon.setId(couponStr);
       coupon.setActive(true);
+      coupon.setExpireAt(LocalDateTime.now().plusDays(GameUtil.COUPON_LIFETIME_DAY));
       coupon.setIssued(true);
       coupon.setUserId(user.getId());
       coupon = this.couponRepository.save(coupon);

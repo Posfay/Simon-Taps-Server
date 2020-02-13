@@ -1,5 +1,7 @@
 package com.simon.taps.server.controllers.coupons;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +19,7 @@ import com.simon.taps.server.util.ResponseErrorsUtil;
 import com.simon.taps.server.util.ServerUtil;
 
 @RestController
-public class GetCouponsController {
+public class GetUsersCouponsController {
 
   @Autowired
   private CouponRepository couponRepository;
@@ -45,8 +47,29 @@ public class GetCouponsController {
 
     for (Coupon coupon : coupons) {
 
-      if (coupon.getActive()) {
-        couponsStr.add(coupon.getId());
+      if (LocalDateTime.now().isBefore(coupon.getExpireAt())) {
+
+        LocalDateTime fromDateTime = LocalDateTime.now();
+        LocalDateTime toDateTime = coupon.getExpireAt();
+
+        LocalDateTime tempDateTime = LocalDateTime.from(fromDateTime);
+
+        long days = tempDateTime.until(toDateTime, ChronoUnit.DAYS);
+        tempDateTime = tempDateTime.plusDays(days);
+
+        long hours = tempDateTime.until(toDateTime, ChronoUnit.HOURS);
+        tempDateTime = tempDateTime.plusHours(hours);
+
+        long minutes = tempDateTime.until(toDateTime, ChronoUnit.MINUTES);
+        tempDateTime = tempDateTime.plusMinutes(minutes);
+
+        String couponPlusExpirationStr = coupon.getId() + "-" + days + " " + hours + " " + minutes;
+
+        couponsStr.add(couponPlusExpirationStr);
+      } else {
+
+        coupon.setActive(false);
+        this.couponRepository.save(coupon);
       }
     }
 
