@@ -77,9 +77,6 @@ public class CreateRoomController {
 
     this.databaseUtil.saveRoomAndPlayer(newRoom, newPlayer);
 
-    User user = this.userRepository.findById(newPlayer.getId()).get();
-    user.setPlayed(user.getPlayed() + 1);
-
     this.databaseUtil.garbageCollection();
 
     return craftResponse(1);

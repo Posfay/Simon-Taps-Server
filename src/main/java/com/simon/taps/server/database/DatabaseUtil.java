@@ -190,6 +190,10 @@ public class DatabaseUtil {
 
     User user = this.userRepository.findById(playerId).get();
 
+    user.setPlayed(user.getPlayed() + 1);
+
+    user = this.userRepository.save(user);
+
     // NOT enough points AND NOT admin -> NO coupons
     if (!(wonRoundNumber >= GameUtil.MIN_SCORE_TO_EARN_COUPON) && !(user.getAdmin())) {
       return;
