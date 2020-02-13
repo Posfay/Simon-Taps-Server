@@ -2,6 +2,8 @@ package com.simon.taps.server.util;
 
 public class GameUtil {
 
+  public static final Long COUPON_LIFETIME_AFTER_EXPIRED_DAY = 3L;
+
   public static final Long COUPON_LIFETIME_DAY = 3L;
 
   public static final String END = "5_end";

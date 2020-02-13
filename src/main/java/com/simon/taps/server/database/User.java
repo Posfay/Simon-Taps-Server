@@ -20,6 +20,12 @@ public class User {
   @Column(name = "last_won", columnDefinition = "TIMESTAMP")
   private LocalDateTime lastWon;
 
+  @Column(name = "played")
+  private Long played;
+
+  @Column(name = "won")
+  private Long won;
+
   @Column(name = "won_today")
   private Long wonToday;
 
@@ -33,6 +39,14 @@ public class User {
 
   public LocalDateTime getLastWon() {
     return this.lastWon;
+  }
+
+  public Long getPlayed() {
+    return this.played;
+  }
+
+  public Long getWon() {
+    return this.won;
   }
 
   public Long getWonToday() {
@@ -49,6 +63,14 @@ public class User {
 
   public void setLastWon(final LocalDateTime lastWon) {
     this.lastWon = lastWon;
+  }
+
+  public void setPlayed(final Long played) {
+    this.played = played;
+  }
+
+  public void setWon(final Long won) {
+    this.won = won;
   }
 
   public void setWonToday(final Long wonToday) {

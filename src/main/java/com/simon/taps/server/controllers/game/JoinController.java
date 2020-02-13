@@ -105,6 +105,11 @@ public class JoinController {
       break;
     }
 
+    User user = this.userRepository.findById(postBody.getPlayerId()).get();
+    user.setPlayed(user.getPlayed() + 1);
+
+    this.userRepository.save(user);
+
     return craftResponse(playersInRoom);
   }
 
