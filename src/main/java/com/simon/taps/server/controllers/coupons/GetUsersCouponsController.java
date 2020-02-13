@@ -47,7 +47,7 @@ public class GetUsersCouponsController {
 
     for (Coupon coupon : coupons) {
 
-      if (LocalDateTime.now().isBefore(coupon.getExpireAt())) {
+      if (LocalDateTime.now().isBefore(coupon.getExpireAt()) && coupon.getActive()) {
 
         LocalDateTime fromDateTime = LocalDateTime.now();
         LocalDateTime toDateTime = coupon.getExpireAt();
