@@ -55,7 +55,12 @@ public class StateController {
 
   private HashMap<String, Object> endState(final Room room, final String playerId) {
 
-    this.databaseUtil.tryToIssueCoupons(room, playerId);
+    Player player = this.playerRepository.findById(playerId).get();
+
+    if (!player.getIssuedCoupon()) {
+
+      this.databaseUtil.tryToIssueCoupons(room, playerId);
+    }
 
     // might be null because of not achieving enough points or reaching daily limit
     String currentCoupon = this.playerRepository.findById(playerId).get().getCoupon();

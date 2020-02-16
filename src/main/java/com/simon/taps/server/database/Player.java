@@ -15,6 +15,9 @@ public class Player {
   @Id
   private String id;
 
+  @Column(name = "issued_coupon")
+  private Boolean issuedCoupon;
+
   @Column(name = "ready")
   private Boolean ready;
 
@@ -33,6 +36,10 @@ public class Player {
 
   public String getId() {
     return this.id;
+  }
+
+  public Boolean getIssuedCoupon() {
+    return this.issuedCoupon;
   }
 
   public Boolean getReady() {
@@ -57,6 +64,10 @@ public class Player {
 
   public void setId(final String id) {
     this.id = id;
+  }
+
+  public void setIssuedCoupon(final Boolean issuedCoupon) {
+    this.issuedCoupon = issuedCoupon;
   }
 
   public void setReady(final Boolean ready) {

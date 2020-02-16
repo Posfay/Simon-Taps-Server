@@ -1,5 +1,6 @@
 package com.simon.taps.server.controllers.coupons;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -41,6 +42,12 @@ public class CheckCouponController {
     }
 
     Coupon coupon = couponOpt.get();
+
+    if (coupon.getExpireAt().isBefore(LocalDateTime.now())) {
+
+      coupon.setActive(false);
+      coupon = this.couponRepository.save(coupon);
+    }
 
     HashMap<String, Object> responseMap = new HashMap<>();
 

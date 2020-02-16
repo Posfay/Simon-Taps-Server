@@ -50,6 +50,7 @@ public class DatabaseUtil {
     newPlayer.setReady(false);
     newPlayer.setRestartReady(false);
     newPlayer.setCoupon(null);
+    newPlayer.setIssuedCoupon(false);
 
     return newPlayer;
   }
