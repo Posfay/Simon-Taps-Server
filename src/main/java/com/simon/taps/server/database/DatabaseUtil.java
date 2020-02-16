@@ -208,6 +208,10 @@ public class DatabaseUtil {
 
       issueCoupons(playerId);
     }
+
+    player.setIssuedCoupon(true);
+
+    this.playerRepository.save(player);
   }
 
 }
