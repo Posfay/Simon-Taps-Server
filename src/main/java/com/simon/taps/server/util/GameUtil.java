@@ -16,7 +16,7 @@ public class GameUtil {
 
   public static final Long MAX_ROOM_IDLE_MIN = 15L;
 
-  public static final Long MIN_SCORE_TO_EARN_COUPON = 13L;
+  public static final Long MIN_SCORE_TO_EARN_COUPON = 10L;
 
   public static final String PLAYING = "4_playing";
 
