@@ -24,7 +24,7 @@ public class ServerUtil {
 
   public static final String LEFT = "left";
 
-  public static final String MIN_COMPATIBLE_VERSION = "1.12.0";
+  public static final String MIN_COMPATIBLE_VERSION = "1.13.0";
 
   public static final String NUMBER_OF_PLAYERS = "numberOfPlayers";
 
@@ -35,6 +35,8 @@ public class ServerUtil {
   public static final String PATTERN = "pattern";
 
   public static final String REASON = "reason";
+
+  public static final String RESTART_APPLICATION_PASSWORD = "%S0B9A8L7E6B5A4M$";
 
   public static final String STATUS = "status";
 

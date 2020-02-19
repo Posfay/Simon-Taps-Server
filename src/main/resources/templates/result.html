@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+
+  <head>
+    <title th:text="${checkCoupon.coupon}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  
+  <body>
+  
+    <h1 th:text="${checkCoupon.coupon}">Result</h1>
+    <p th:text="${active} ? 'Active' : 'Inactive'" />
+    <a href="/check">Check another coupon</a>
+    
+    <hr>
+    
+    <div th:if="${active == false}">
+      <form action="#" th:action="@{/activate-coupon}" method="post">
+        <input type="hidden" th:attr="value=${checkCoupon.coupon}" th:name="couponStr" />
+        <input type="submit" value="Activate" />
+      </form>
+    </div>
+    
+    <div th:if="${active == true}">
+      <form action="#" th:action="@{/inactivate-coupon}" method="post">
+        <input type="hidden" th:attr="value=${checkCoupon.coupon}" th:name="couponStr" />
+        <input type="submit" value="Inactivate" />
+      </form>
+    </div>
+    
+  </body>
+</html>

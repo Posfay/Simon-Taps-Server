@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+
+  <head>
+    <title th:text="${couponId}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  
+  <body>
+  
+    <h1>Successfully updated coupon!</h1>
+    <h1 th:text="${couponId}">Result</h1>
+    <p th:text="${active} ? 'Active' : 'Inactive'" />
+    <a href="/check">Check another coupon</a>
+    
+  </body>
+</html>

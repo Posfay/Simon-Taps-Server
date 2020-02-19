@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+
+  <head>
+    <title>Checking Coupon</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+  
+  <body>
+  
+    <h1>Check coupon</h1>
+    <form action="#" th:action="@{/check}" th:object="${checkCoupon}" method="post">
+      <p>Coupon: <input type="text" th:field="*{coupon}" /></p>
+      <p><input type="submit" value="Check" /> <input type="reset" value="Reset" /></p>
+    </form>
+      
+  </body>
+</html>
