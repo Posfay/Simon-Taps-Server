@@ -70,11 +70,12 @@ public class DatabaseUtil {
   public User createDefaultUser() {
 
     User newUser = new User();
+    newUser.setCreatedAt(LocalDateTime.now());
     newUser.setLastWon(LocalDateTime.now());
     newUser.setWonToday(0L);
-    newUser.setAdmin(false);
     newUser.setPlayed(0L);
     newUser.setWon(0L);
+    newUser.setAdmin(false);
 
     return newUser;
   }

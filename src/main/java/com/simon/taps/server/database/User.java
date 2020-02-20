@@ -14,6 +14,9 @@ public class User {
   @Column(name = "admin")
   private Boolean admin;
 
+  @Column(name = "created_at", columnDefinition = "TIMESTAMP")
+  private LocalDateTime createdAt;
+
   @Id
   private String id;
 
@@ -31,6 +34,10 @@ public class User {
 
   public Boolean getAdmin() {
     return this.admin;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return this.createdAt;
   }
 
   public String getId() {
@@ -55,6 +62,10 @@ public class User {
 
   public void setAdmin(final Boolean admin) {
     this.admin = admin;
+  }
+
+  public void setCreatedAt(final LocalDateTime createdAt) {
+    this.createdAt = createdAt;
   }
 
   public void setId(final String id) {
