@@ -190,10 +190,13 @@ public class DatabaseUtil {
     long wonRoundNumber = room.getRound() - 1;
 
     User user = this.userRepository.findById(playerId).get();
-
     user.setPlayed(user.getPlayed() + 1);
 
+    Player player = this.playerRepository.findById(playerId).get();
+    player.setIssuedCoupon(true);
+
     user = this.userRepository.save(user);
+    player = this.playerRepository.save(player);
 
     // NOT enough points AND NOT admin -> NO coupons
     if (!(wonRoundNumber >= GameUtil.MIN_SCORE_TO_EARN_COUPON) && !(user.getAdmin())) {
@@ -201,17 +204,10 @@ public class DatabaseUtil {
     }
 
     // Enough points OR admin -> Coupon
-
-    Player player = this.playerRepository.findById(playerId).get();
-
     if (player.getCoupon() == null) {
 
       issueCoupons(playerId);
     }
-
-    player.setIssuedCoupon(true);
-
-    this.playerRepository.save(player);
   }
 
 }

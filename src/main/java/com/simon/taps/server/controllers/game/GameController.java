@@ -116,7 +116,21 @@ public class GameController {
       room.setState(GameUtil.END);
       this.roomRepository.save(room);
 
-      return craftResponse(GameUtil.END);
+      player = this.playerRepository.findById(player.getId()).get();
+
+      if (!player.getIssuedCoupon()) {
+
+        this.databaseUtil.tryToIssueCoupons(room, player.getId());
+      }
+
+      // might be null because of not achieving enough points or reaching daily limit
+      String currentCoupon = this.playerRepository.findById(player.getId()).get().getCoupon();
+
+      HashMap<String, Object> responseMap = craftResponse(GameUtil.END);
+
+      responseMap.put(ServerUtil.COUPON, currentCoupon);
+
+      return responseMap;
     }
   }
 }

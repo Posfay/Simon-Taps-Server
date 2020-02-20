@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.persistence.OptimisticLockException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,13 +82,15 @@ public class RestartController {
           player.setReady(false);
           player.setRestartReady(false);
           player.setCoupon(null);
+          player.setIssuedCoupon(false);
 
           toBeSavedPlayers.add(player);
         }
 
         try {
           this.databaseUtil.saveRoomAndPlayers(room, toBeSavedPlayers);
-        } catch (OptimisticLockException ignore) {
+        } catch (Exception ignore) {
+          // Optimistic lock
           continue;
         }
 
@@ -98,7 +99,8 @@ public class RestartController {
 
         try {
           room = this.roomRepository.save(room);
-        } catch (OptimisticLockException ignore) {
+        } catch (Exception ignore) {
+          // Optimistic lock
           continue;
         }
 
