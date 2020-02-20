@@ -24,7 +24,7 @@ public class RestartApplicationController {
     ServerApplication.restart();
 
     HashMap<String, Object> responseMap = new HashMap<>();
-    responseMap.put("status", "starting application...");
+    responseMap.put("restart", "starting application...");
 
     return responseMap;
   }
