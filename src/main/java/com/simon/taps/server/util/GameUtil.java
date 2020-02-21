@@ -12,11 +12,11 @@ public class GameUtil {
 
   public static final Long MAX_COUPONS_PER_DAY = 2L;
 
-  public static final Long MAX_PATTERN_LENGTH = 30L;
+  public static final Long MAX_PATTERN_LENGTH = 100L;
 
   public static final Long MAX_ROOM_IDLE_MIN = 15L;
 
-  public static final Long MIN_SCORE_TO_EARN_COUPON = 10L;
+  public static final Long MIN_SCORE_TO_EARN_COUPON = 12L;
 
   public static final String PLAYING = "4_playing";
 
